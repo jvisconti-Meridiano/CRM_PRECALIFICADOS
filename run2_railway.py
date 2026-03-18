@@ -2957,6 +2957,60 @@ def fp_create():
     set_flash(msg, "ok" if ok else "err")
     return redirect(url_for("fp"))
 
+import os
+from flask import request, redirect, url_for, flash, render_template_string, abort
+
+@app.route("/admin/uploads", methods=["GET", "POST"])
+def admin_uploads():
+    # 🔒 SOLO ADMIN
+    if session.get("role") != "ADMIN":
+        abort(403)
+
+    data_dir = os.getenv("DATA_DIR", ".")
+
+    if request.method == "POST":
+        if "file" not in request.files:
+            flash("No se seleccionó archivo", "danger")
+            return redirect(request.url)
+
+        file = request.files["file"]
+
+        if file.filename == "":
+            flash("Archivo vacío", "danger")
+            return redirect(request.url)
+
+        filename = file.filename.lower()
+
+        # Validación estricta
+        if filename not in ["cartera.xlsx", "facturas.xlsx"]:
+            flash("Solo se permite subir cartera.xlsx o Facturas.xlsx", "danger")
+            return redirect(request.url)
+
+        path = os.path.join(data_dir, filename)
+
+        file.save(path)
+
+        flash(f"{filename} actualizado correctamente", "success")
+        return redirect(request.url)
+
+    # UI simple
+    return render_template_string("""
+        <h2>Subir archivos</h2>
+        <p>Solo ADMIN</p>
+
+        <form method="post" enctype="multipart/form-data">
+            <input type="file" name="file">
+            <button type="submit">Subir</button>
+        </form>
+
+        <br>
+        <p>Archivos esperados:</p>
+        <ul>
+            <li>cartera.xlsx</li>
+            <li>Facturas.xlsx</li>
+        </ul>
+    """)
+
 @app.route("/fp/upload", methods=["POST"], endpoint="fp_upload")
 @roles_required(ROLE_ADMIN, ROLE_RISK)
 def fp_upload():
