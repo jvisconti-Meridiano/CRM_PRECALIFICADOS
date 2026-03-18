@@ -364,32 +364,6 @@ def init_db():
     """)
     cur.execute(f"CREATE INDEX IF NOT EXISTS idx_batches_user ON {TABLE_IMPORT_BATCHES}(username)")
 
-from werkzeug.security import generate_password_hash
-
-def create_hardcoded_admin():
-    conn = get_db_connection()
-
-    user = conn.execute(
-        "SELECT id FROM usuarios WHERE username = ?",
-        ("admin",)
-    ).fetchone()
-
-    if not user:
-        conn.execute(
-            """
-            INSERT INTO usuarios (username, password, rol, activo)
-            VALUES (?, ?, ?, ?)
-            """,
-            ("admin", generate_password_hash("admin123"), "ADMIN", 1)
-        )
-        conn.commit()
-        print("Admin creado")
-
-    conn.close()
-
-init_db()
-create_hardcoded_admin()
-    
 # MIGRACIONES (si venías de DB vieja)
     cols = table_columns(conn, TABLE_FIRMANTES)
 
@@ -4601,10 +4575,6 @@ def credit_policy_delete_extra(row_id: int):
 
 from apscheduler.schedulers.background import BackgroundScheduler
 
-# En Railway/Gunicorn la app se importa como módulo, por lo que init_db() no entra por __main__.
-# Inicializamos esquema al importar para asegurar que existan tablas como limit_blocks antes del primer request.
-init_db()
-
 scheduler = BackgroundScheduler()
 
 scheduler.add_job(
@@ -4616,6 +4586,34 @@ scheduler.add_job(
 scheduler.start()
 
 if __name__ == "__main__":
+    init_db()
 # CLI jobs de alertas deshabilitados en el base app: usar wrapper/worker externo.
     app.run(host="0.0.0.0", port=5000, debug=False)
 
+
+
+from werkzeug.security import generate_password_hash
+
+def create_hardcoded_admin():
+    conn = get_db_connection()
+    try:
+        user = conn.execute(
+            "SELECT id FROM users WHERE username = ?",
+            ("admin",)
+        ).fetchone()
+
+        if not user:
+            conn.execute(
+                """
+                INSERT INTO users (username, pass_hash, role, is_active, created_at)
+                VALUES (?, ?, ?, ?, ?)
+                """,
+                ("admin", generate_password_hash("admin123"), "ADMIN", 1, now_str())
+            )
+            conn.commit()
+            print("Admin creado: admin")
+    finally:
+        conn.close()
+
+init_db()
+create_hardcoded_admin()
