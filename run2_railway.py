@@ -43,6 +43,7 @@ except Exception:
 # --------------------------- | Config | ---------------------------
 
 APP_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.getenv("DATA_DIR", ".")
 DB_PATH = os.path.join(APP_DIR, "crm.db")
 CARTERA_XLSX = os.path.join(APP_DIR, "cartera.xlsx")
 FACTURAS_XLSX = os.path.join(APP_DIR, "Facturas.xlsx")
