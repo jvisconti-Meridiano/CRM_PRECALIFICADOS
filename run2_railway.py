@@ -4595,7 +4595,7 @@ if __name__ == "__main__":
 from werkzeug.security import generate_password_hash
 
 def create_hardcoded_admin():
-    conn = get_db_connection()
+    conn = get_db()
     try:
         user = conn.execute(
             "SELECT id FROM users WHERE username = ?",
