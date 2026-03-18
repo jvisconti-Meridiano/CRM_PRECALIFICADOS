@@ -364,6 +364,32 @@ def init_db():
     """)
     cur.execute(f"CREATE INDEX IF NOT EXISTS idx_batches_user ON {TABLE_IMPORT_BATCHES}(username)")
 
+from werkzeug.security import generate_password_hash
+
+def create_hardcoded_admin():
+    conn = get_db_connection()
+
+    user = conn.execute(
+        "SELECT id FROM usuarios WHERE username = ?",
+        ("admin",)
+    ).fetchone()
+
+    if not user:
+        conn.execute(
+            """
+            INSERT INTO usuarios (username, password, rol, activo)
+            VALUES (?, ?, ?, ?)
+            """,
+            ("admin", generate_password_hash("admin123"), "ADMIN", 1)
+        )
+        conn.commit()
+        print("Admin creado")
+
+    conn.close()
+
+init_db()
+create_hardcoded_admin()
+    
 # MIGRACIONES (si venías de DB vieja)
     cols = table_columns(conn, TABLE_FIRMANTES)
 
