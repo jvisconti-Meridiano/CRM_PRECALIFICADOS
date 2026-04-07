@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Meridiano CRM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script>
+(()=>{try{const t=localStorage.getItem("meridiano-theme")||"dark";const isLight=t==="light";const bg=isLight?"#F5FBF8":"#08110F";const fg=isLight?"#123126":"#F4FFF9";document.documentElement.dataset.theme=t;document.documentElement.style.colorScheme=isLight?"light":"dark";document.documentElement.style.background=bg;document.documentElement.style.color=fg;document.documentElement.style.setProperty('--bg-base',bg);document.documentElement.style.setProperty('--text-primary',fg);document.documentElement.style.setProperty('--text-muted',isLight?'#789087':'#7EA095');document.documentElement.style.setProperty('--color-blue','#2E66F0');document.documentElement.style.setProperty('--color-blue-glow',isLight?'rgba(46,102,240,0.12)':'rgba(46,102,240,0.16)');}catch(_){}})();
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body,#root{height:100%;font-family:'DM Sans',system-ui,sans-serif;background:var(--bg-base,#08110F);color:var(--text-primary,#F4FFF9);-webkit-font-smoothing:antialiased;transition:background .32s cubic-bezier(.22,1,.36,1),color .24s ease} body{overflow:auto;} input[type=checkbox]{accent-color:var(--color-blue,#2E66F0);} :focus-visible{outline:2px solid var(--color-blue-glow, rgba(46,102,240,0.16));outline-offset:2px;border-radius:12px;}
+a{color:#2E66F0;text-decoration:none}a:hover{text-decoration:underline}
+input,select,textarea,button{font-family:inherit}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:3px}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="importmap">{"imports":{"react":"https://esm.sh/react@18.3.1","react-dom/client":"https://esm.sh/react-dom@18.3.1/client","htm":"https://esm.sh/htm@3.1.1"}}</script>
+<script type="module" src="/static/app.js"></script>
+</body>
+</html>

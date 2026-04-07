@@ -1,0 +1,1 @@
+# Meridiano CRM — Models package
